@@ -14,7 +14,6 @@ Possible values for user fields-
 "profile_image_url", "protected", "public_metrics", "url", "verified", "withheld"
 """
 
-
 TWEET_FIELDS = [
     "id",
     "text",
@@ -30,6 +29,10 @@ TWEET_FIELDS = [
     "referenced_tweets"
 ]
 
+TWEET_SUBFIELDS = {
+    "public_metrics": ['retweet_count', 'reply_count', 'like_count', 'quote_count']
+}
+
 USER_FIELDS = [
     "id",
     "username",
@@ -42,6 +45,12 @@ USER_FIELDS = [
     "url",
     "verified"
 ]
+
+USER_SUBFIELDS = {
+    "public_metrics": ['followers_count', 'following_count', 'tweet_count', 'listed_count']
+}
+
+EXPANSIONS = ['author_id', 'referenced_tweets.id']
 
 HASHTAGS = [
     "#IchBinHanna",

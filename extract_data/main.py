@@ -25,8 +25,15 @@ end_time = "2021-06-14T00:00:00.000Z"
 
 query = utilities.get_query(params.HASHTAGS)
 
-output = utilities.get_data(client, query, params.TWEET_FIELDS, params.USER_FIELDS, start_time,
-                            end_time)
+expansions = params.EXPANSIONS
+
+tweet_fields = params.TWEET_FIELDS
+tweet_subfields = params.TWEET_SUBFIELDS
+user_fields = params.USER_FIELDS
+user_subfields = params.USER_SUBFIELDS
+
+output = utilities.get_data(client, query, expansions, tweet_fields, tweet_subfields, user_fields, user_subfields,
+                            start_time, end_time)
 
 if output is not None:
     df_tweet, df_user, df_retweet = output
