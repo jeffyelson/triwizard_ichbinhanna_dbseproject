@@ -220,4 +220,7 @@ def get_query(hashtags, query, data):
         else:
             temp += " OR " + query + ":" + _id
 
+    if len(query_list) == 0:
+        return [query_part1]
+
     return query_list
