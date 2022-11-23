@@ -28,7 +28,7 @@ user_fields = params.USER_FIELDS
 user_subfields = params.USER_SUBFIELDS
 
 start_time = "2021-06-01T00:00:00.000Z"
-end_time = "2022-10-31T00:00:00.000Z"
+end_time = "2022-11-01T00:00:00.000Z"
 
 df_input = pd.read_csv("twitter_data.csv")
 query_list = utilities.get_query(params.HASHTAGS, "from", df_input["author_id"].unique())
