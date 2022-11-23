@@ -24,6 +24,8 @@ def get_data(client, query, expansions, tweet_fields, tweet_subfields, user_fiel
     if output is None:
         return None
     else:
+        print("Api call - " + str(api_calls) + "; Tweets extracted - " + str(
+            len(output[0])) + "; Users extracted - " + str(len(output[1])))
         tweet_list += output[0]
         user_list += output[1]
 

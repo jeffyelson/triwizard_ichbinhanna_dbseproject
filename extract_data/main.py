@@ -44,15 +44,13 @@ else:
     for query in query_list:
         output = utilities.get_data(client, query, expansions, tweet_fields, tweet_subfields, user_fields,
                                     user_subfields, start_time, end_time, api_calls)
-        if output is None:
-            continue
-        else:
+        if output is not None:
             tweet_list += output[0]
             user_list += output[1]
             api_calls = output[2]
 
         i += 1
-        print("Query: " + str(i) + " Tweets extracted so far: " + str(
+        print("Query: " + str(i) + "; Tweets extracted so far: " + str(
             len(tweet_list)) + "; Users extracted so far: " + str(len(user_list)))
 
 df_tweets = utilities.save_output(tweet_list, tweet_fields, tweet_subfields, "extracted_tweets")
