@@ -5,6 +5,7 @@ import time
 from datetime import datetime
 from deep_translator import GoogleTranslator
 import params
+from geopy.geocoders import Nominatim
 
 
 def preprocess_data(df_tweets, df_users):
@@ -45,6 +46,9 @@ def preprocess_data(df_tweets, df_users):
 
     print("Performing bio translations")
     df_users = translate_text(df_users, params.USER_DATA_COLUMNS[3], params.USER_DATA_COLUMNS[4])
+
+    print("Updating locations")
+    df_users = get_locations(df_users)
 
     df_users = df_users[params.USER_DATA_COLUMNS]
 
@@ -290,3 +294,93 @@ def translate_text(df, input_column="text", output_column="translated_text", tra
     df[output_column] = translated_text_list
 
     return df
+
+
+# Updating locations
+def get_proper_location(address, geolocator):
+    try:
+        geolocation = geolocator.geocode(address, exactly_one=True)
+    except:
+        return "Unknown", "Unknown", "Unknown"
+
+    if geolocation is None:
+        return "Unknown", "Unknown", "Unknown"
+
+    try:
+        temp = geolocator.reverse((geolocation.latitude, geolocation.longitude), language="en")
+    except Exception as e:
+        print(str(e) + " - " + str(address))
+        return "Unknown", "Unknown", "Unknown"
+
+    if temp is None:
+        print("Nonetype - " + str(address))
+        print(address)
+        return "Unknown", "Unknown", "Unknown"
+
+    temp = temp.raw['address']
+
+    try:
+        country = temp.get('country', 'Unknown')
+        if country == 'Unknown':
+            country = temp.get('country_code', 'Unknown')
+    except:
+        country = "Unknown"
+
+    try:
+        state = temp.get('state', 'Unknown')
+    except:
+        state = "Unknown"
+
+    try:
+        city = temp.get('city', 'Unknown')
+    except:
+        city = "Unknown"
+
+    return city, state, country
+
+
+def get_locations(df):
+    if "location" not in df.columns:
+        print("No location column present.")
+        return df
+
+    #     Get list of unique locations
+
+    locations = df['location'].dropna().unique()
+
+    print("Number of unique locations present - " + str(len(locations)))
+
+    if len(locations) == 0:
+        print("No locations to extract")
+        return df
+
+    print('Initialize the geolocator')
+    geolocator = Nominatim(user_agent="geoapiExercises")
+
+    locations_dict = {}
+
+    print('Get proper locations')
+    start_time = datetime.now()
+    count = 0
+    for loc in locations:
+        count += 1
+        print('|', end='')
+        locations_dict[loc] = get_proper_location(loc, geolocator)
+        if count % 500 == 0:
+            print()
+            print('Locations extracted so far - ' + str(count))
+    print()
+    end_time = datetime.now()
+    print("Extracted " + str(len(locations)) + " locations in - " + str(end_time - start_time))
+
+    df['location_city'], df['location_state'], df['location_country'] = zip(
+        *df['location'].map(lambda x: get_data_from_dict(x, locations_dict)))
+
+    return df
+
+
+def get_data_from_dict(x, loc_dict):
+    if str(x) == 'nan':
+        return "Unknown", "Unknown", "Unknown"
+
+    return loc_dict[x]

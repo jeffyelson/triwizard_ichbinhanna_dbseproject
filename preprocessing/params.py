@@ -5,7 +5,8 @@ MENTIONS_PATTERN = re.compile(r'@[^ ]+')
 SPECIAL_CHARS_PATTERN = re.compile(r'[^A-Za-zÀ-ž ]')
 MULTIPLE_SPACES_PATTERN = re.compile(' +')
 
-USER_DATA_COLUMNS = ['id', 'created_at', 'description', 'updated_bio', 'translated_bio', 'location', 'public_metrics_followers_count',
+USER_DATA_COLUMNS = ['id', 'created_at', 'description', 'updated_bio', 'translated_bio', 'location', 'location_city',
+                     'location_state', 'location_country' 'public_metrics_followers_count',
                      'public_metrics_following_count', 'public_metrics_tweet_count', 'public_metrics_listed_count',
                      'verified', 'extracted_urls', 'extracted_mentions', 'extracted_hashtags', 'tweets_in_dataset',
                      'retweets_in_dataset']
