@@ -35,6 +35,7 @@ TWEET_SUBFIELDS = {
 
 USER_FIELDS = [
     "id",
+    "name",
     "username",
     "created_at",
     "description",
