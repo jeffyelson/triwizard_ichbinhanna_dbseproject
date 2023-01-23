@@ -11,7 +11,7 @@ USER_DATA_COLUMNS = ['id', 'created_at', 'description', 'updated_bio', 'translat
                      'verified', 'extracted_urls', 'extracted_mentions', 'extracted_hashtags', 'tweets_in_dataset',
                      'retweets_in_dataset']
 
-TWEET_DATA_COLUMNS = ['id', 'author_id', 'updated_text', 'created_at', 'lang', 'public_metrics_retweet_count',
+TWEET_DATA_COLUMNS = ['id', 'author_id', 'text', 'updated_text', 'created_at', 'lang', 'public_metrics_retweet_count',
                       'public_metrics_reply_count', 'public_metrics_like_count', 'public_metrics_quote_count',
                       'extracted_urls', 'extracted_mentions', 'extracted_hashtags']
 
