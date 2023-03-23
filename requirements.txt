@@ -5,3 +5,14 @@ openpyxl
 numpy
 deep_translator
 geopy
+streamlit
+plotly
+wordcloud
+matplotlib
+HanTa
+tweetnlp
+umap-learn
+sentence-transformers
+tqdm
+scikit-learn
+nltk
