@@ -34,6 +34,7 @@ output_file = st.sidebar.selectbox(
 )
 
 _df = read_file(_output_files_dir, output_files[output_file])
+_df_aspect_categories = read_file(_output_files_dir, "Final_Aspect_Categories.csv")
 
 aspect_levels_list = ["Individual Aspect", "Aspect Category"]
 
@@ -87,10 +88,51 @@ def generate_bar_graphs(df, level, aspect):
         axes[i].set_xticks(x_axis, temp["Category"])
         axes[i].set_title(level + " - " + aspect[i])
 
-    # plt.savefig("Aspects.png", bbox_inches='tight')
+    # plt.savefig("top-aspects.png", bbox_inches='tight', transparent=True)
     st.pyplot(fig)
     # plt.plot()
 
 
+def create_category_table(df_cat, level, aspectList):
+    df_cat = df_cat.sort_values("Frequency", ascending=False)
+
+    if len(aspectList) >= 1:
+        for i in range(len(aspectList)):
+            if level == "Aspect":
+                aspect_cat = df_cat[df_cat["Aspect"] == aspectList[i]]["Aspect_Category"].iloc[0]
+            else:
+                aspect_cat = aspectList[i]
+            if i == 0:
+                df_category_aspect = df_cat[df_cat["Aspect_Category"] == aspect_cat][
+                    ["Aspect", "Frequency"]].reset_index(
+                    drop=True).head(15)
+                df_category_aspect.rename(
+                    columns={"Aspect": aspect_cat, "Frequency": aspect_cat + "_Frequency"},
+                    inplace=True)
+                df_category_aspect[aspect_cat + "_Frequency"] = df_category_aspect[aspect_cat + "_Frequency"].astype(
+                    str)
+            else:
+                temp = df_cat[df_cat["Aspect_Category"] == aspect_cat][["Aspect", "Frequency"]].reset_index(
+                    drop=True).head(15)
+                temp.rename(
+                    columns={"Aspect": aspect_cat, "Frequency": aspect_cat + "_Frequency"},
+                    inplace=True)
+                temp[aspect_cat + "_Frequency"] = temp[aspect_cat + "_Frequency"].astype(str)
+                df_category_aspect = df_category_aspect.merge(temp, left_index=True, right_index=True, how="outer")
+
+        df_category_aspect = df_category_aspect.fillna("")
+
+        styled_df = df_category_aspect.style.set_table_styles(
+            [{"selector": "", "props": [("border", "1px solid grey")]},
+             {"selector": "tbody td", "props": [("border", "1px solid grey")]},
+             {"selector": "th", "props": [("border", "1px solid grey")]}
+             ]
+        )
+        st.dataframe(styled_df)
+
+
 if len(_aspect) >= 1:
+    st.header("Aspect sentiments in different user groups")
     generate_bar_graphs(_df, table_level, _aspect)
+    st.header("Aspect Categories")
+    create_category_table(_df_aspect_categories, table_level, _aspect)

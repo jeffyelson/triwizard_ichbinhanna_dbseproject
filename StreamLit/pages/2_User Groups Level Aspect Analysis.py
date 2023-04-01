@@ -292,9 +292,9 @@ def create_table(df_absa, level, category_list):
 
         styled_df2 = df_ranks.style.apply(lambda x: get_aspect_color(x, color_dict), axis=1)
 
-        return styled_df1, styled_df2
+        return styled_df1, styled_df2, df_category_aspect
     else:
-        return None, None
+        return None, None, None
 
 
 # Co-occuring aspects
@@ -344,16 +344,18 @@ def generate_bar_graphs(df, category):
         axes[i].tick_params(axis='both', which='both', labelbottom=True)
 
     plt.subplots_adjust(hspace=0.4)
+    # plt.savefig("cooccuring.png", bbox_inches='tight')
     st.pyplot(fig)
 
 
 # Execution
 # Table Generation
 st.header("Top " + table_level + " in different user groups")
-final_table1, final_table2 = create_table(_df, table_level, _category)
+final_table1, final_table2, temp = create_table(_df, table_level, _category)
 
 if final_table1 is not None:
     st.dataframe(final_table1)
+    st.dataframe(temp)
     # st.dataframe(final_table2)
 
 # Co-occuring Aspects

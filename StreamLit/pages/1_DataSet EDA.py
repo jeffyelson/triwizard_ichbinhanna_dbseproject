@@ -4,15 +4,25 @@ import streamlit as st
 import plotly.express as px
 import numpy as np
 import plotly
+import os
 
+# Initial Setup
 st.set_page_config(page_title="Twitter Data Analysis",
                    page_icon=":bar_chart:",
                    layout="wide"
                    )
 
-df = pd.read_csv("Final_Users_File.csv")
 
-dataframe = pd.read_csv("Final_Tweet_Data.csv")
+def read_file(output_files_dir, filename):
+    return pd.read_csv(os.path.join(output_files_dir, filename))
+
+
+_output_files_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
+                                 'Final Output Files')
+
+df = read_file(_output_files_dir, "Final_Users_File.csv")
+
+dataframe = read_file(_output_files_dir, "Final_Tweet_Data.csv")
 
 st.sidebar.header("Please Filter Here:")
 country = st.sidebar.multiselect(
@@ -23,12 +33,12 @@ country = st.sidebar.multiselect(
 city = st.sidebar.multiselect(
     "Select the City:",
     options=df['location_city'].unique(),
-default="Magdeburg"
+    default="Magdeburg"
 )
 state = st.sidebar.multiselect(
     "Select the State:",
     options=df['location_state'].unique(),
-default="Saxony-Anhalt"
+    default="Saxony-Anhalt"
 )
 
 category = st.sidebar.multiselect(
@@ -78,7 +88,7 @@ fig = px.pie(df_selectiona,
              values=category_valuesa,
              names=category_labelsa,
              title=" Different User Groups Present ",
-color_discrete_sequence=px.colors.sequential.Viridis
+             color_discrete_sequence=px.colors.sequential.Viridis
 
              )
 st.plotly_chart(fig)
@@ -103,7 +113,7 @@ fig2 = px.pie(df_selection2c,
               values=category_valuesc,
               names=category_labelsc,
               title=f" Different User Groups present in {state} state ",
-color_discrete_sequence=px.colors.sequential.Viridis
+              color_discrete_sequence=px.colors.sequential.Viridis
               )
 st.plotly_chart(fig2)
 
