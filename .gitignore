@@ -2,3 +2,6 @@ Extraction_output/
 Processed_files
 .env
 .idea/
+StreamLit/saved_images/
+streamlit_venv/
+.vscode/
